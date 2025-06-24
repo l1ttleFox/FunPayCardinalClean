@@ -25,7 +25,6 @@ import os
 from pip._internal.cli.main import main
 import FunPayAPI
 import handlers
-import announcements
 from locales.localizer import Localizer
 from FunPayAPI import utils as fp_utils
 from Utils import cardinal_tools
@@ -632,7 +631,6 @@ class Cardinal(object):
         получает данные аккаунта и профиля.
         """
         self.add_handlers_from_plugin(handlers)
-        self.add_handlers_from_plugin(announcements)
         self.load_plugins()
         self.add_handlers()
 

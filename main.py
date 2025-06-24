@@ -16,6 +16,7 @@ while True:
         break
     except ModuleNotFoundError:
         main(["install", "-U", "bcrypt>=4.2.0"])
+
 import Utils.cardinal_tools
 import Utils.config_loader as cfg_loader
 from first_setup import first_setup

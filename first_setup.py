@@ -162,16 +162,17 @@ def first_setup():
     while True:
         print(
             f"\n{Fore.MAGENTA}{Style.BRIGHT}┌── {Fore.CYAN}Введи API-токен Telegram-бота (получить его можно у @BotFather). "
-            f"@username бота должен начинаться с \"funpay\". {Fore.RED}(._.){Style.RESET_ALL}")
+            # f"@username бота должен начинаться с \"funpay\". {Fore.RED}(._.){Style.RESET_ALL}"
+        )
         token = input(f"{Fore.MAGENTA}{Style.BRIGHT}└───> {Style.RESET_ALL}").strip()
         try:
             if not token or not token.split(":")[0].isdigit():
                 raise Exception("Неправильный формат токена")
-            username = telebot.TeleBot(token).get_me().username
-            if not username.lower().startswith("funpay"):
-                print(
-                    f"\n{Fore.CYAN}{Style.BRIGHT}@username бота должен начинаться с \"funpay\"! {Fore.RED}\(!!˚0˚)/{Style.RESET_ALL}")
-                continue
+            # username = telebot.TeleBot(token).get_me().username
+            # if not username.lower().startswith("funpay"):
+            #     print(
+            #         f"\n{Fore.CYAN}{Style.BRIGHT}@username бота должен начинаться с \"funpay\"! {Fore.RED}\(!!˚0˚)/{Style.RESET_ALL}")
+            #     continue
         except Exception as ex:
             s = ""
             if str(ex):
@@ -182,14 +183,14 @@ def first_setup():
 
     while True:
         print(
-            f"\n{Fore.MAGENTA}{Style.BRIGHT}┌── {Fore.CYAN}Придумай пароль (его потребует Telegram-бот). Пароль должен содержать более 8 символов, заглавные, строчные буквы и хотя бы одну цифру "
+            f"\n{Fore.MAGENTA}{Style.BRIGHT}┌── {Fore.CYAN}Придумай пароль (его потребует Telegram-бот)."
             f" {Fore.RED}ᴖ̮ ̮ᴖ{Style.RESET_ALL}")
         password = input(f"{Fore.MAGENTA}{Style.BRIGHT}└───> {Style.RESET_ALL}").strip()
-        if len(password) < 8 or password.lower() == password or password.upper() == password or not any(
-                [i.isdigit() for i in password]):
-            print(
-                f"\n{Fore.CYAN}{Style.BRIGHT}Это плохой пароль. Попробуй еще раз! {Fore.RED}\(!!˚0˚)/{Style.RESET_ALL}")
-            continue
+        # if len(password) < 8 or password.lower() == password or password.upper() == password or not any(
+        #         [i.isdigit() for i in password]):
+        #     print(
+        #         f"\n{Fore.CYAN}{Style.BRIGHT}Это плохой пароль. Попробуй еще раз! {Fore.RED}\(!!˚0˚)/{Style.RESET_ALL}")
+        #     continue
         break
 
     config.set("Telegram", "enabled", "1")

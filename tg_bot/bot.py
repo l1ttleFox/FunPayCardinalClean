@@ -550,22 +550,22 @@ class TGBot:
         """
         self.bot.send_message(m.chat.id, _("about", self.cardinal.VERSION))
 
-    def check_updates(self, m: Message):
-        curr_tag = f"v{self.cardinal.VERSION}"
-        releases = updater.get_new_releases(curr_tag)
-        if isinstance(releases, int):
-            errors = {
-                1: ["update_no_tags", ()],
-                2: ["update_lasted", (curr_tag,)],
-                3: ["update_get_error", ()],
-            }
-            self.bot.send_message(m.chat.id, _(errors[releases][0], *errors[releases][1]))
-            return
-        for release in releases:
-            self.bot.send_message(m.chat.id, _("update_available", release.name, release.description))
-            time.sleep(1)
-        self.bot.send_message(m.chat.id, _("update_update"))
-
+    # def check_updates(self, m: Message):
+    #     curr_tag = f"v{self.cardinal.VERSION}"
+    #     releases = updater.get_new_releases(curr_tag)
+    #     if isinstance(releases, int):
+    #         errors = {
+    #             1: ["update_no_tags", ()],
+    #             2: ["update_lasted", (curr_tag,)],
+    #             3: ["update_get_error", ()],
+    #         }
+    #         self.bot.send_message(m.chat.id, _(errors[releases][0], *errors[releases][1]))
+    #         return
+    #     for release in releases:
+    #         self.bot.send_message(m.chat.id, _("update_available", release.name, release.description))
+    #         time.sleep(1)
+    #     self.bot.send_message(m.chat.id, _("update_update"))
+    #
     def get_backup(self, m: Message):
         logger.info(
             f"[IMPORTANT] Получаю бэкап по запросу пользователя $MAGENTA@{m.from_user.username} (id: {m.from_user.id})$RESET.")
@@ -585,35 +585,35 @@ class TGBot:
         self.get_backup(m)
         return True
 
-    def update(self, m: Message):
-        curr_tag = f"v{self.cardinal.VERSION}"
-        releases = updater.get_new_releases(curr_tag)
-        if isinstance(releases, int):
-            errors = {
-                1: ["update_no_tags", ()],
-                2: ["update_lasted", (curr_tag,)],
-                3: ["update_get_error", ()],
-            }
-            self.bot.send_message(m.chat.id, _(errors[releases][0], *errors[releases][1]))
-            return
-
-        if not self.create_backup(m):
-            return
-        release = releases[-1]
-        if updater.download_zip(release.sources_link) \
-                or (release_folder := updater.extract_update_archive()) == 1:
-            self.bot.send_message(m.chat.id, _("update_download_error"))
-            return
-        self.bot.send_message(m.chat.id, _("update_downloaded").format(release.name, str(len(releases) - 1)))
-
-        if updater.install_release(release_folder):
-            self.bot.send_message(m.chat.id, _("update_install_error"))
-            return
-
-        if getattr(sys, 'frozen', False):
-            self.bot.send_message(m.chat.id, _("update_done_exe"))
-        else:
-            self.bot.send_message(m.chat.id, _("update_done"))
+    # def update(self, m: Message):
+    #     curr_tag = f"v{self.cardinal.VERSION}"
+    #     releases = updater.get_new_releases(curr_tag)
+    #     if isinstance(releases, int):
+    #         errors = {
+    #             1: ["update_no_tags", ()],
+    #             2: ["update_lasted", (curr_tag,)],
+    #             3: ["update_get_error", ()],
+    #         }
+    #         self.bot.send_message(m.chat.id, _(errors[releases][0], *errors[releases][1]))
+    #         return
+    #
+    #     if not self.create_backup(m):
+    #         return
+    #     release = releases[-1]
+    #     if updater.download_zip(release.sources_link) \
+    #             or (release_folder := updater.extract_update_archive()) == 1:
+    #         self.bot.send_message(m.chat.id, _("update_download_error"))
+    #         return
+    #     self.bot.send_message(m.chat.id, _("update_downloaded").format(release.name, str(len(releases) - 1)))
+    #
+    #     if updater.install_release(release_folder):
+    #         self.bot.send_message(m.chat.id, _("update_install_error"))
+    #         return
+    #
+    #     if getattr(sys, 'frozen', False):
+    #         self.bot.send_message(m.chat.id, _("update_done_exe"))
+    #     else:
+    #         self.bot.send_message(m.chat.id, _("update_done"))
 
     def send_system_info(self, m: Message):
         """
@@ -1114,8 +1114,7 @@ class TGBot:
         self.msg_handler(self.send_logs, commands=["logs"])
         self.msg_handler(self.del_logs, commands=["del_logs"])
         self.msg_handler(self.about, commands=["about"])
-        self.msg_handler(self.check_updates, commands=["check_updates"])
-        self.msg_handler(self.update, commands=["update"])
+        # self.msg_handler(self.update, commands=["update"])
         self.msg_handler(self.get_backup, commands=["get_backup"])
         self.msg_handler(self.create_backup, commands=["create_backup"])
         self.msg_handler(self.send_system_info, commands=["sys"])
@@ -1213,30 +1212,7 @@ class TGBot:
         """
         Изменяет описания и название бота.
         """
-
-        name = self.bot.get_me().full_name
-        limit = 64
-        add_to_name = ["FunPay Bot | Бот ФанПей", "FunPay Bot", "FunPayBot", "FunPay"]
-        new_name = name
-        if "vertex" in new_name.lower():
-            new_name = ""
-        new_name = new_name.split("ㅤ")[0].strip()
-        if "funpay" not in new_name.lower():
-            for m_name in add_to_name:
-                if len(new_name) + 2 + len(m_name) <= limit:
-                    new_name = f"{(new_name + ' ').ljust(limit - len(m_name) - 1, 'ㅤ')} {m_name}"
-                    break
-            if new_name != name:
-                self.bot.set_my_name(new_name)
-        sh_text = "🛠️ github.com/sidor0912/FunPayCardinal 💰 @sidor_donate 👨‍💻 @sidor0912 🧩 @fpc_plugins 🔄 @fpc_updates 💬 @funpay_cardinal"
-        res = self.bot.get_my_short_description().short_description
-        if res != sh_text:
-            self.bot.set_my_short_description(sh_text)
-        for i in [None, *localizer.languages.keys()]:
-            res = self.bot.get_my_description(i).description
-            text = _("adv_description", self.cardinal.VERSION, language=i)
-            if res != text:
-                self.bot.set_my_description(text, language_code=i)
+        pass
 
     def init(self):
         self.__register_handlers()
