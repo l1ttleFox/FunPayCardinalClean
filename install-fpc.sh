@@ -217,7 +217,7 @@ if ! sudo mkdir /home/$username/fpc-install ; then
   exit 2
 fi
 
-gh_repo="sidor0912/FunPayCardinal"
+gh_repo="l1ttleFox/FunPayCardinalClean"
 LOCATION=$(curl -sS https://api.github.com/repos/$gh_repo/releases/latest | grep "zipball_url" | awk '{ print $2 }' | sed 's/,$//' | sed 's/"//g' )
 
 #14
